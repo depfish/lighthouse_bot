@@ -4,7 +4,8 @@ Tencent Cloud Lighthouse auto boot up and shutdown
 × 流量用完自动关机，并发送Telegram通知  
 × 每月流量重置后，或者流量还没用完自动开机，并发送Telegram通知。  
 
-1. 需要先通过@Botfather创建Telegram bot，获取到token 
+1. 需要先通过@Botfather创建Telegram bot，获取token。  
+   创建bot后，先给bot发条消息，方便程序自动获取到chat_id
 2. 获取腾讯云API密钥
 > 先登录上腾讯云官网，然后点开下面这个链接：https://console.cloud.tencent.com/cam/capi
 3. 设置环境变量，添加脚本到crontab定时任务

@@ -194,7 +194,7 @@ def notify(notice_list: list):
 
     t = """
 -------------------------------------------------
-InstanceId  Name  TrafficUsed   Bandwidth Ration
+InstanceId  Name  TrafficUsed   Bandwidth Ratio
 -------------------------------------------------
 """
 
