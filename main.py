@@ -67,6 +67,7 @@ class Lighthouse(tencentcloud):
             instances = []
             if resp.get("Response").get("InstanceSet"):
                 instances = resp.get("Response").get("InstanceSet")
+            logger.info("got %s Lighthouse instance" % len(instances))
             return instances
         except TencentCloudSDKException as err:
             logger.error(err)
@@ -89,6 +90,7 @@ class Lighthouse(tencentcloud):
             InstanceTrafficPackageSet = []
             if resp.get("Response").get("InstanceTrafficPackageSet"):
                 InstanceTrafficPackageSet = resp.get("Response").get("InstanceTrafficPackageSet")
+            logger.info("got %s TrafficPackage info" % len(InstanceTrafficPackageSet))
             return InstanceTrafficPackageSet
         except TencentCloudSDKException as err:
             logger.error(err)
@@ -105,6 +107,7 @@ class Lighthouse(tencentcloud):
             logger.debug(params)
             resp = client.call_json("StopInstances", params)
             logger.debug(resp)
+            logger.info("stop %s instance successfully" % len(InstanceIds))
 
             return resp
         except TencentCloudSDKException as err:
@@ -122,6 +125,7 @@ class Lighthouse(tencentcloud):
             logger.debug(params)
             resp = client.call_json("StartInstances", params)
             logger.debug(resp)
+            logger.info("start %s instance successfully" % len(InstanceIds))
 
             return resp
         except TencentCloudSDKException as err:
