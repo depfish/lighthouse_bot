@@ -140,8 +140,11 @@ class Telegram:
         url = f"https://api.telegram.org/bot{token}/getUpdates"
         try:
             resp = requests.get(url).json()
-            chat_id = resp['result'][0]['message']['chat']['id']
-            self.chat_id = chat_id
+            if len(resp['result']) > 1:
+                chat_id = resp['result'][0]['message']['chat']['id']
+                self.chat_id = chat_id
+            else:
+                logger.error("can't get the Telegram bot chat_id, please send a message to that bot")
         except requests.exceptions.Timeout as e:
             logger.error("get telegram chat_id Timeout: %s" % e)
             exit(5)
