@@ -140,7 +140,7 @@ class Telegram:
         url = f"https://api.telegram.org/bot{token}/getUpdates"
         try:
             resp = requests.get(url).json()
-            if len(resp['result']) > 1:
+            if len(resp['result']) > 0:
                 chat_id = resp['result'][0]['message']['chat']['id']
                 self.chat_id = chat_id
             else:
