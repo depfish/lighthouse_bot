@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-
+from time import sleep
 import requests
 from tencentcloud.common import credential
 from tencentcloud.common.common_client import CommonClient
@@ -297,4 +297,8 @@ if __name__ == '__main__':
     tg = Telegram(tgtoken)
     chat_id = tg.get_chat_id()
     logger.info("got chat_id: %s" % chat_id)
-    tcmain()
+    while True:
+        tcmain()
+        logger.info("sleep 5*60s")
+        sleep(5*60)
+
