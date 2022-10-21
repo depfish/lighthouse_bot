@@ -137,12 +137,14 @@ class Telegram:
     def __init__(self, token):
         self.token = token
         self.bot = Bot(token)
-        url = f"https://api.telegram.org/bot{token}/getUpdates"
+
+    def get_chat_id(self):
+        url = f"https://api.telegram.org/bot{self.token}/getUpdates"
         try:
             resp = requests.get(url).json()
             if len(resp['result']) > 0:
-                chat_id = resp['result'][0]['message']['chat']['id']
-                self.chat_id = chat_id
+                chatid = resp['result'][0]['message']['chat']['id']
+                return chatid
             else:
                 logger.error("can't get the Telegram bot chat_id, please send a message to that bot")
         except requests.exceptions.Timeout as e:
@@ -152,8 +154,8 @@ class Telegram:
             logger.error("get telegram chat_id ConnectionError")
             exit(5)
 
-    def sendMsg(self, msg: str):
-        self.bot.send_message(chat_id=self.chat_id, text=msg)
+    def sendMsg(self, chatid: str, msg: str):
+        self.bot.send_message(chat_id=chatid, text=msg)
 
 
 def check_traffic(instances_list: list, traffic_instance_list: list):
@@ -196,13 +198,11 @@ def check_traffic(instances_list: list, traffic_instance_list: list):
 def notify(notice_list: list):
     stop = list()
     start = list()
-    tg = Telegram(tgtoken)
-    # tg.sendMsg('测试消息\n123')
 
     t = """
--------------------------------------------------
+-----------------------------------------------------
 InstanceId  Name  TrafficUsed   Bandwidth Ratio
--------------------------------------------------
+-----------------------------------------------------
 """
 
     for i in notice_list:
@@ -218,7 +218,7 @@ InstanceId  Name  TrafficUsed   Bandwidth Ratio
 {s.get('InstanceId')} {s.get('InstanceName')} {s.get('TrafficUsed_GB')}G {s.get('TrafficPackageTotal_TB')}T {s.get('Ratio')}
 """
         stop_msg = t + "\n" + stop_str + "\n"
-        tg.sendMsg(stop_msg)
+        tg.sendMsg(chat_id, stop_msg)
     else:
         logger.info("No instance need to stop")
 
@@ -229,7 +229,7 @@ InstanceId  Name  TrafficUsed   Bandwidth Ratio
 {s.get('InstanceId')} {s.get('InstanceName')} {s.get('TrafficUsed_GB')}G {s.get('TrafficPackageTotal_TB')}T {s.get('Ratio')}
 """
         start_msg = t + "\n" + start_str + "\n"
-        tg.sendMsg(start_msg)
+        tg.sendMsg(chat_id, start_msg)
     else:
         logger.info("No instance need to start")
 
@@ -293,4 +293,8 @@ if __name__ == '__main__':
     if len(ak) == 0 or len(sk) == 0 or len(tgtoken) == 0:
         logger.info("Please set the environment variables !")
         exit(0)
+
+    tg = Telegram(tgtoken)
+    chat_id = tg.get_chat_id()
+    logger.info("got chat_id: %s" % chat_id)
     tcmain()
